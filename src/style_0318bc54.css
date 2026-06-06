@@ -1,0 +1,340 @@
+@font-face {
+  font-family: '2045alphabet';
+  src: url('https://ec2045.github.io/2045font/2045alphabet.otf') format('opentype');
+  font-display: swap;
+}
+
+
+:root {
+  --bg-base: #050505;
+  --glass-bg: rgba(20, 20, 25, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  --accent-artr: #00e5ff;
+  --accent-artr-dim: rgba(0, 229, 255, 0.15);
+
+  --accent-ts: #ff3366;
+  --accent-ts-dim: rgba(255, 51, 102, 0.15);
+
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+
+  --font-mono: '2045alphabet', 'Space Mono', monospace;
+  --font-sans: '2045alphabet', 'Noto Sans JP', sans-serif;
+  --font-en: '2045alphabet', 'Outfit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated background gradient blobs */
+.bg-blobs {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: radial-gradient(circle at 15% 50%, rgba(0, 229, 255, 0.05), transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(255, 51, 102, 0.05), transparent 50%);
+}
+
+.bg-blobs::before,
+.bg-blobs::after {
+  content: '';
+  position: absolute;
+  width: 40vw;
+  height: 40vw;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+  animation: float 20s infinite ease-in-out alternate;
+}
+
+.bg-blobs::before {
+  background: var(--accent-artr-dim);
+  top: -10%;
+  left: -10%;
+}
+
+.bg-blobs::after {
+  background: var(--accent-ts-dim);
+  bottom: -10%;
+  right: -10%;
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate(10%, 10%) scale(1.1);
+  }
+}
+
+/* Scanlines */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 3px);
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.5;
+}
+
+/* Main Container */
+.container {
+  width: 100%;
+  max-width: 800px;
+  padding: 40px 20px;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 50px;
+  animation: fadeInDown 1s ease-out;
+}
+
+.archive-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-artr);
+  border: 1px solid var(--accent-artr);
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+  box-shadow: 0 0 10px var(--accent-artr-dim);
+}
+
+h1 {
+  font-family: var(--font-en);
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+/* Chat Log */
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.message.artr {
+  align-self: flex-start;
+}
+
+.message.ts {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+.message.ts .meta {
+  flex-direction: row-reverse;
+}
+
+.name {
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.artr .name {
+  color: var(--accent-artr);
+}
+
+.ts .name {
+  color: var(--accent-ts);
+}
+
+.bubble {
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bubble:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+}
+
+.artr .bubble {
+  border-top-left-radius: 2px;
+  border-left: 2px solid var(--accent-artr);
+}
+
+.ts .bubble {
+  border-top-right-radius: 2px;
+  border-right: 2px solid var(--accent-ts);
+  background: rgba(255, 51, 102, 0.03);
+}
+
+/* Staggered animation delays */
+.message:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.message:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.message:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.message:nth-child(4) {
+  animation-delay: 0.8s;
+}
+
+.message:nth-child(5) {
+  animation-delay: 1.0s;
+}
+
+.message:nth-child(6) {
+  animation-delay: 1.2s;
+}
+
+.message:nth-child(7) {
+  animation-delay: 1.4s;
+}
+
+.message:nth-child(8) {
+  animation-delay: 1.6s;
+}
+
+.message:nth-child(9) {
+  animation-delay: 1.8s;
+}
+
+.message:nth-child(10) {
+  animation-delay: 2.0s;
+}
+
+.message:nth-child(11) {
+  animation-delay: 2.2s;
+}
+
+.message:nth-child(12) {
+  animation-delay: 2.4s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Footer */
+footer {
+  margin-top: 60px;
+  padding: 30px 0;
+  text-align: center;
+  border-top: 1px solid var(--glass-border);
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .message {
+    max-width: 95%;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .bubble {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+  }
+}
